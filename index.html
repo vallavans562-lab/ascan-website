@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Scan — Document & Photo Scanner to PDF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Tesseract OCR for text scanning -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" id="logoBtn">
+                <div class="logo-icon">
+                    <i class="fas fa-expand"></i>
+                </div>
+                <span class="logo-text">A<span class="logo-accent"> Scan</span></span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="scanner">Scanner</a></li>
+                <li><a href="#" class="nav-link" data-page="ocr">OCR Text</a></li>
+                <li><a href="#" class="nav-link" data-page="about">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="nav-hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== PAGE: HOME (Front Page) ==================== -->
+    <section class="page page-home active" id="pageHome">
+        <!-- Hero Background -->
+        <div class="hero-bg-effects">
+            <div class="floating-doc doc-1"><i class="fas fa-file-pdf"></i></div>
+            <div class="floating-doc doc-2"><i class="fas fa-file-image"></i></div>
+            <div class="floating-doc doc-3"><i class="fas fa-camera"></i></div>
+            <div class="floating-doc doc-4"><i class="fas fa-qrcode"></i></div>
+            <div class="hero-orb orb-1"></div>
+            <div class="hero-orb orb-2"></div>
+            <div class="hero-orb orb-3"></div>
+            <canvas id="particleCanvas"></canvas>
+        </div>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-bolt"></i> Fast & Free Document Scanner
+                </div>
+                <h1 class="hero-title">
+                    Scan Photos &<br/>
+                    Documents to<br/>
+                    <span class="gradient-text">PDF Instantly</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Upload images or use your camera to scan documents, photos, and receipts. 
+                    Convert them to PDF with auto-adjustment, OCR text extraction, and instant download.
+                </p>
+
+                <!-- ===== MAIN ACTION BUTTONS ===== -->
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-lg" id="heroUploadBtn">
+                        <i class="fas fa-cloud-arrow-up"></i> Upload File
+                    </button>
+                    <button class="btn btn-camera btn-lg" id="heroCameraBtn">
+                        <i class="fas fa-camera"></i> Open Camera
+                    </button>
+                </div>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Auto Adjust</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>OCR Text Scan</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>PDF Download</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>100% Free</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phone Mockup -->
+            <div class="hero-mockup">
+                <div class="phone-frame">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="mock-header">
+                            <i class="fas fa-expand"></i> A Scan
+                        </div>
+                        <div class="mock-preview">
+                            <div class="mock-doc">
+                                <div class="mock-line w80"></div>
+                                <div class="mock-line w100"></div>
+                                <div class="mock-line w60"></div>
+                                <div class="mock-line w90"></div>
+                                <div class="mock-line w70"></div>
+                                <div class="mock-img"></div>
+                                <div class="mock-line w100"></div>
+                                <div class="mock-line w50"></div>
+                            </div>
+                        </div>
+                        <div class="mock-actions">
+                            <div class="mock-btn"><i class="fas fa-cloud-arrow-up"></i></div>
+                            <div class="mock-btn main"><i class="fas fa-camera"></i></div>
+                            <div class="mock-btn"><i class="fas fa-file-pdf"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="steps-section">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                        <h3>Upload or Capture</h3>
+                        <p>Upload from your device or take a photo using your camera</p>
+                    </div>
+                    <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                        <h3>Auto Adjust</h3>
+                        <p>Image is automatically enhanced — brightness, contrast, and alignment</p>
+                    </div>
+                    <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon"><i class="fas fa-file-pdf"></i></div>
+                        <h3>Download PDF</h3>
+                        <p>Get your scanned document as a clean PDF file instantly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-showcase">
+            <div class="container">
+                <h2 class="section-title">Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon fi-blue"><i class="fas fa-magic"></i></div>
+                        <h3>Auto Enhancement</h3>
+                        <p>Automatic brightness, contrast, and sharpness adjustment for crystal-clear scans</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon fi-purple"><i class="fas fa-font"></i></div>
+                        <h3>OCR Text Recognition</h3>
+                        <p>Extract text from scanned images and edit it directly in your browser</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon fi-teal"><i class="fas fa-camera"></i></div>
+                        <h3>Camera Capture</h3>
+                        <p>Use your device camera to scan documents on the go</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon fi-green"><i class="fas fa-images"></i></div>
+                        <h3>Multi-Page PDF</h3>
+                        <p>Upload multiple images and combine them into a single PDF document</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon fi-orange"><i class="fas fa-crop-simple"></i></div>
+                        <h3>Smart Cropping</h3>
+                        <p>Automatic edge detection and perspective correction for documents</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon fi-pink"><i class="fas fa-shield-halved"></i></div>
+                        <h3>100% Private</h3>
+                        <p>All processing happens in your browser. No files are uploaded to any server</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PAGE: SCANNER ==================== -->
+    <section class="page page-scanner" id="pageScanner">
+        <div class="scanner-container">
+            <!-- Upload Area -->
+            <div class="scanner-upload-area" id="scannerUploadArea">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-arrow-up"></i>
+                    </div>
+                    <h2>Upload Your Documents</h2>
+                    <p>Drag & drop images here, or click the buttons below</p>
+                    <p class="upload-formats">Supports: JPG, PNG, JPEG, WEBP, BMP, GIF</p>
+                    <div class="upload-buttons">
+                        <button class="btn btn-primary btn-lg" id="uploadBtn">
+                            <i class="fas fa-folder-open"></i> Choose Files
+                        </button>
+                        <button class="btn btn-camera btn-lg" id="cameraBtn">
+                            <i class="fas fa-camera"></i> Open Camera
+                        </button>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" multiple hidden />
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden />
+                </div>
+            </div>
+
+            <!-- Camera View -->
+            <div class="camera-view" id="cameraView" style="display:none;">
+                <div class="camera-header">
+                    <h3><i class="fas fa-camera"></i> Camera Scanner</h3>
+                    <button class="btn-icon" id="closeCameraBtn"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="camera-preview">
+                    <video id="videoFeed" autoplay playsinline></video>
+                    <div class="camera-overlay">
+                        <div class="scan-frame">
+                            <span class="corner tl"></span>
+                            <span class="corner tr"></span>
+                            <span class="corner bl"></span>
+                            <span class="corner br"></span>
+                        </div>
+                    </div>
+                    <canvas id="captureCanvas" style="display:none;"></canvas>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn btn-outline btn-md" id="cancelCameraBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-capture" id="captureBtn">
+                        <div class="capture-ring">
+                            <div class="capture-dot"></div>
+                        </div>
+                    </button>
+                    <button class="btn btn-outline btn-md" id="switchCameraBtn">
+                        <i class="fas fa-camera-rotate"></i> Flip
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Preview & Adjustment -->
+            <div class="editor-view" id="editorView" style="display:none;">
+                <div class="editor-header">
+                    <h3><i class="fas fa-sliders"></i> Adjust & Convert</h3>
+                    <div class="editor-header-actions">
+                        <button class="btn btn-outline btn-sm" id="addMoreBtn">
+                            <i class="fas fa-plus"></i> Add More
+                        </button>
+                        <input type="file" id="addMoreInput" accept="image/*" multiple hidden />
+                    </div>
+                </div>
+
+                <div class="editor-body">
+                    <!-- Thumbnails Sidebar -->
+                    <div class="thumbnails-panel" id="thumbnailsPanel">
+                        <h4>Pages (<span id="pageCount">0</span>)</h4>
+                        <div class="thumbnails-list" id="thumbnailsList"></div>
+                    </div>
+
+                    <!-- Main Preview -->
+                    <div class="preview-panel">
+                        <div class="preview-canvas-wrap">
+                            <canvas id="previewCanvas"></canvas>
+                        </div>
+
+                        <!-- Adjustment Controls -->
+                        <div class="adjust-controls">
+                            <h4><i class="fas fa-wand-magic-sparkles"></i> Adjustments</h4>
+                            <div class="adjust-row">
+                                <label><i class="fas fa-sun"></i> Brightness</label>
+                                <input type="range" id="brightnessRange" min="-100" max="100" value="0" />
+                                <span class="range-val" id="brightnessVal">0</span>
+                            </div>
+                            <div class="adjust-row">
+                                <label><i class="fas fa-circle-half-stroke"></i> Contrast</label>
+                                <input type="range" id="contrastRange" min="-100" max="100" value="0" />
+                                <span class="range-val" id="contrastVal">0</span>
+                            </div>
+                            <div class="adjust-row">
+                                <label><i class="fas fa-droplet"></i> Saturation</label>
+                                <input type="range" id="saturationRange" min="-100" max="100" value="0" />
+                                <span class="range-val" id="saturationVal">0</span>
+                            </div>
+                            <div class="adjust-row">
+                                <label><i class="fas fa-rotate"></i> Rotation</label>
+                                <input type="range" id="rotationRange" min="0" max="270" value="0" step="90" />
+                                <span class="range-val" id="rotationVal">0°</span>
+                            </div>
+                            <div class="adjust-presets">
+                                <button class="preset-btn active" data-filter="original">Original</button>
+                                <button class="preset-btn" data-filter="auto">Auto Fix</button>
+                                <button class="preset-btn" data-filter="bw">B&W</button>
+                                <button class="preset-btn" data-filter="highcontrast">High Contrast</button>
+                                <button class="preset-btn" data-filter="document">Document</button>
+                            </div>
+                            <button class="btn btn-outline btn-sm btn-full" id="resetAdjustBtn">
+                                <i class="fas fa-arrow-rotate-left"></i> Reset All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Action Bar -->
+                <div class="editor-actions">
+                    <button class="btn btn-cancel btn-lg" id="cancelEditBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-ocr btn-lg" id="ocrBtn">
+                        <i class="fas fa-font"></i> Scan Text (OCR)
+                    </button>
+                    <button class="btn btn-primary btn-lg" id="downloadPdfBtn">
+                        <i class="fas fa-file-pdf"></i> Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PAGE: OCR ==================== -->
+    <section class="page page-ocr" id="pageOcr">
+        <div class="ocr-container">
+            <div class="ocr-header">
+                <h2><i class="fas fa-font"></i> OCR — Scanned Text</h2>
+                <p>Extracted text from your scanned image. You can edit, copy, or download it.</p>
+            </div>
+            <div class="ocr-body">
+                <div class="ocr-image-panel" id="ocrImagePanel">
+                    <img id="ocrSourceImg" alt="Source" />
+                </div>
+                <div class="ocr-text-panel">
+                    <div class="ocr-text-header">
+                        <h4>Extracted Text</h4>
+                        <div class="ocr-text-actions">
+                            <button class="btn-icon" id="copyTextBtn" title="Copy"><i class="fas fa-copy"></i></button>
+                            <button class="btn-icon" id="downloadTextBtn" title="Download"><i class="fas fa-download"></i></button>
+                        </div>
+                    </div>
+                    <textarea id="ocrTextArea" placeholder="Scanned text will appear here..."></textarea>
+                </div>
+            </div>
+            <div class="ocr-progress" id="ocrProgress" style="display:none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ocrProgressFill"></div>
+                </div>
+                <p id="ocrStatusText">Initializing OCR engine...</p>
+            </div>
+            <div class="ocr-actions">
+                <button class="btn btn-cancel btn-md" id="ocrBackBtn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="btn btn-primary btn-md" id="ocrDownloadPdfBtn">
+                    <i class="fas fa-file-pdf"></i> Save as PDF with Text
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PAGE: ABOUT ==================== -->
+    <section class="page page-about" id="pageAbout">
+        <div class="container">
+            <div class="about-hero">
+                <div class="about-icon"><i class="fas fa-expand"></i></div>
+                <h1>About <span class="gradient-text">A Scan</span></h1>
+                <p>A Scan is a free, browser-based document scanner that converts your photos and images into clean PDF files — no app install needed.</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <i class="fas fa-lock"></i>
+                    <h3>Privacy First</h3>
+                    <p>All processing happens locally in your browser. Your files never leave your device.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Lightning Fast</h3>
+                    <p>Convert images to PDF in seconds with automatic image enhancement.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-globe"></i>
+                    <h3>Works Everywhere</h3>
+                    <p>Desktop, tablet, or phone — works on any modern browser.</p>
+                </div>
+            </div>
+
+            <div class="about-faq">
+                <h2>FAQ</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question"><span>Is A Scan really free?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>Yes! A Scan is 100% free with no hidden charges or sign-up required.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>Are my documents safe?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>Absolutely. Everything runs in your browser. No files are uploaded to any server.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>What is OCR?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>OCR (Optical Character Recognition) extracts readable text from scanned images so you can copy, edit, or search it.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>Can I scan multiple pages?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>Yes! Upload multiple images or capture multiple photos and combine them into one multi-page PDF.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo" id="footerLogoBtn">
+                        <div class="logo-icon"><i class="fas fa-expand"></i></div>
+                        <span class="logo-text">A<span class="logo-accent"> Scan</span></span>
+                    </a>
+                    <p>Free browser-based document scanner. Convert photos to PDF instantly.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#" data-page="scanner">Scanner</a></li>
+                        <li><a href="#" data-page="ocr">OCR Text</a></li>
+                        <li><a href="#" data-page="about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 A Scan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Success!</span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+<style>
+    /* ============================================
+   CSS VARIABLES & THEME
+   ============================================ */
+:root {
+    --font-primary: 'Inter', sans-serif;
+    --font-heading: 'Poppins', sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.12);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.18);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.25);
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --nav-height: 68px;
+
+    /* Dark Theme (Default) */
+    --bg-primary: #0b0d1a;
+    --bg-secondary: #111328;
+    --bg-tertiary: #181a35;
+    --bg-card: #151730;
+    --bg-input: #1c1e3a;
+    --bg-hover: #20224a;
+    --text-primary: #eef0ff;
+    --text-secondary: #9fa3c7;
+    --text-muted: #5d6088;
+    --border-color: rgba(255,255,255,0.07);
+    --border-hover: rgba(99,102,241,0.4);
+    --accent-blue: #6366f1;
+    --accent-purple: #8b5cf6;
+    --accent-teal: #14b8a6;
+    --accent-cyan: #06b6d4;
+    --accent-green: #22c55e;
+    --accent-orange: #f59e0b;
+    --accent-pink: #ec4899;
+    --accent-red: #ef4444;
+    --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+    --gradient-blue: linear-gradient(135deg, #6366f1, #818cf8);
+    --gradient-purple: linear-gradient(135deg, #8b5cf6, #a78bfa);
+    --gradient-teal: linear-gradient(135deg, #14b8a6, #06b6d4);
+    --gradient-card: linear-gradient(145deg, rgba(99,102,241,0.06), rgba(6,182,212,0.03));
+}
+
+[data-theme="light"] {
+    --bg-primary: #f5f7ff;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #eef0ff;
+    --bg-card: #ffffff;
+    --bg-input: #eef0ff;
+    --bg-hover: #e5e7ff;
+    --text-primary: #1a1c2e;
+    --text-secondary: #555577;
+    --text-muted: #8888aa;
+    --border-color: rgba(0,0,0,0.07);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-primary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+textarea { font-family: inherit; resize: vertical; }
+select { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 600; border-radius: var(--radius-full);
+    transition: all var(--transition); cursor: pointer; white-space: nowrap;
+    position: relative; overflow: hidden;
+}
+.btn-sm { padding: 8px 20px; font-size: 0.85rem; }
+.btn-md { padding: 11px 28px; font-size: 0.9rem; }
+.btn-lg { padding: 15px 36px; font-size: 1rem; }
+
+.btn-primary {
+    background: var(--gradient-primary); color: #fff;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(99,102,241,0.5);
+}
+
+.btn-camera {
+    background: linear-gradient(135deg, #14b8a6, #06b6d4); color: #fff;
+    box-shadow: 0 4px 20px rgba(20,184,166,0.35);
+}
+.btn-camera:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(20,184,166,0.5);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #64748b, #475569); color: #fff;
+}
+.btn-cancel:hover { transform: translateY(-2px); }
+
+.btn-ocr {
+    background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff;
+    box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+}
+.btn-ocr:hover { transform: translateY(-2px); }
+
+.btn-outline {
+    background: transparent; color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+.btn-outline:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+.btn-full { width: 100%; justify-content: center; }
+.btn-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all var(--transition);
+    background: var(--bg-input);
+}
+.btn-icon:hover { background: var(--bg-hover); color: var(--accent-blue); }
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-height); z-index: 1000;
+    background: rgba(11,13,26,0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition);
+}
+[data-theme="light"] .navbar { background: rgba(245,247,255,0.9); }
+
+.nav-container {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    height: 100%; display: flex; align-items: center; justify-content: space-between;
+}
+
+.nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800;
+    cursor: pointer;
+}
+.logo-icon {
+    width: 40px; height: 40px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1rem;
+}
+.logo-accent { color: var(--accent-blue); }
+
+.nav-links { display: flex; gap: 8px; }
+.nav-link {
+    padding: 8px 18px; border-radius: var(--radius-full);
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--text-secondary); transition: all var(--transition);
+}
+.nav-link:hover { color: var(--text-primary); background: var(--bg-hover); }
+.nav-link.active { color: #fff; background: var(--accent-blue); }
+
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+
+.theme-toggle {
+    width: 40px; height: 40px; border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-tertiary); transition: all var(--transition);
+}
+.theme-toggle:hover { background: var(--bg-hover); }
+
+.nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; padding: 4px;
+}
+.nav-hamburger span {
+    width: 22px; height: 2px; background: var(--text-primary);
+    border-radius: 2px; transition: all var(--transition);
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed; top: var(--nav-height); left: 0; right: 0;
+        background: var(--bg-secondary); flex-direction: column;
+        padding: 16px; gap: 4px; border-bottom: 1px solid var(--border-color);
+        transform: translateY(-120%); transition: transform var(--transition);
+    }
+    .nav-links.active { transform: translateY(0); }
+    .nav-hamburger { display: flex; }
+}
+
+/* ============================================
+   PAGE SYSTEM
+   ============================================ */
+.page {
+    display: none; min-height: 100vh;
+    padding-top: var(--nav-height);
+}
+.page.active { display: block; }
+
+/* ============================================
+   HERO SECTION (HOME)
+   ============================================ */
+.page-home { position: relative; overflow: hidden; }
+
+.hero-bg-effects { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+
+.hero-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(100px); opacity: 0.3;
+    animation: orbFloat 10s ease-in-out infinite;
+}
+.orb-1 { width: 500px; height: 500px; background: var(--accent-blue); top: -15%; left: -10%; }
+.orb-2 { width: 400px; height: 400px; background: var(--accent-teal); bottom: 20%; right: -8%; animation-delay: -4s; }
+.orb-3 { width: 350px; height: 350px; background: var(--accent-purple); top: 50%; left: 40%; animation-delay: -7s; }
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -25px) scale(1.05); }
+    66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+.floating-doc {
+    position: absolute; font-size: 2rem; opacity: 0.08;
+    animation: floatDoc 15s ease-in-out infinite;
+}
+.doc-1 { top: 15%; left: 8%; animation-delay: 0s; color: var(--accent-blue); }
+.doc-2 { top: 25%; right: 12%; animation-delay: -3s; color: var(--accent-purple); }
+.doc-3 { bottom: 30%; left: 5%; animation-delay: -6s; color: var(--accent-teal); }
+.doc-4 { bottom: 20%; right: 8%; animation-delay: -9s; color: var(--accent-orange); }
+
+@keyframes floatDoc {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+#particleCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.hero-container {
+    max-width: 1200px; margin: 0 auto; padding: 80px 24px 60px;
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px; align-items: center;
+    position: relative; z-index: 1;
+}
+
+.hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 18px; border-radius: var(--radius-full);
+    background: rgba(99,102,241,0.12); color: var(--accent-blue);
+    font-size: 0.82rem; font-weight: 600; margin-bottom: 20px;
+    border: 1px solid rgba(99,102,241,0.2);
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 3.6rem; font-weight: 900; line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem; color: var(--text-secondary);
+    margin-bottom: 36px; max-width: 520px; line-height: 1.8;
+}
+
+.hero-actions { display: flex; gap: 16px; margin-bottom: 36px; flex-wrap: wrap; }
+
+.hero-features { display: flex; flex-wrap: wrap; gap: 20px; }
+.hero-feature {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.85rem; color: var(--text-secondary);
+}
+.hero-feature i { color: var(--accent-green); font-size: 0.9rem; }
+
+/* Phone Mockup */
+.hero-mockup { display: flex; justify-content: center; perspective: 1000px; }
+
+.phone-frame {
+    width: 280px; height: 560px;
+    background: var(--bg-card); border: 2px solid var(--border-color);
+    border-radius: 36px; overflow: hidden;
+    box-shadow: var(--shadow-xl), 0 0 80px rgba(99,102,241,0.1);
+    transform: rotateY(-8deg) rotateX(4deg);
+    transition: transform 0.6s ease;
+    position: relative;
+}
+.phone-frame:hover { transform: rotateY(0) rotateX(0); }
+
+.phone-notch {
+    width: 120px; height: 28px;
+    background: var(--bg-primary); border-radius: 0 0 16px 16px;
+    margin: 0 auto; position: relative; z-index: 2;
+}
+
+.phone-screen {
+    height: 100%; display: flex; flex-direction: column;
+    padding: 8px 12px 16px;
+}
+
+.mock-header {
+    text-align: center; font-size: 0.75rem; font-weight: 700;
+    color: var(--accent-blue); padding: 8px 0;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.mock-preview { flex: 1; padding: 12px; }
+
+.mock-doc {
+    background: var(--bg-tertiary); border-radius: var(--radius-sm);
+    padding: 16px; height: 100%;
+    display: flex; flex-direction: column; gap: 8px;
+}
+
+.mock-line {
+    height: 8px; background: var(--border-color); border-radius: 4px;
+    animation: mockPulse 2s ease-in-out infinite;
+}
+.w50 { width: 50%; } .w60 { width: 60%; } .w70 { width: 70%; }
+.w80 { width: 80%; } .w90 { width: 90%; } .w100 { width: 100%; }
+
+.mock-img {
+    width: 100%; height: 60px; background: rgba(99,102,241,0.1);
+    border-radius: var(--radius-sm); margin: 4px 0;
+}
+
+@keyframes mockPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+
+.mock-actions {
+    display: flex; justify-content: center; align-items: center; gap: 16px;
+    padding: 12px 0;
+}
+.mock-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg-tertiary); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 0.85rem; color: var(--text-muted);
+}
+.mock-btn.main {
+    width: 52px; height: 52px;
+    background: var(--gradient-primary); color: #fff; font-size: 1.1rem;
+}
+
+@media (max-width: 968px) {
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
+    .hero-title { font-size: 2.6rem; }
+    .hero-subtitle { margin-left: auto; margin-right: auto; }
+    .hero-actions { justify-content: center; }
+    .hero-features { justify-content: center; }
+    .hero-mockup { display: none; }
+}
+@media (max-width: 480px) {
+    .hero-title { font-size: 2rem; }
+    .hero-actions { flex-direction: column; align-items: center; }
+}
+
+/* ============================================
+   STEPS SECTION
+   ============================================ */
+.steps-section {
+    padding: 80px 0; position: relative; z-index: 1;
+}
+
+.section-title {
+    font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800;
+    text-align: center; margin-bottom: 48px;
+}
+
+.steps-grid {
+    display: flex; align-items: center; justify-content: center;
+    gap: 24px; flex-wrap: wrap;
+}
+
+.step-card {
+    flex: 1; min-width: 220px; max-width: 300px;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 32px 24px; text-align: center;
+    position: relative; transition: all var(--transition);
+}
+.step-card:hover { transform: translateY(-6px); border-color: var(--border-hover); }
+
+.step-number {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    width: 28px; height: 28px; background: var(--gradient-primary);
+    border-radius: 50%; color: #fff; font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.step-icon {
+    width: 60px; height: 60px; margin: 0 auto 16px;
+    background: rgba(99,102,241,0.1); border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: var(--accent-blue);
+}
+
+.step-card h3 { font-family: var(--font-heading); margin-bottom: 8px; font-size: 1.05rem; }
+.step-card p { font-size: 0.88rem; color: var(--text-secondary); }
+
+.step-arrow { font-size: 1.5rem; color: var(--accent-blue); opacity: 0.5; }
+
+@media (max-width: 768px) {
+    .step-arrow { transform: rotate(90deg); }
+    .steps-grid { flex-direction: column; }
+}
+
+/* ============================================
+   FEATURES SHOWCASE
+   ============================================ */
+.features-showcase {
+    padding: 80px 0; background: var(--bg-secondary);
+    position: relative; z-index: 1;
+}
+
+.features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+
+.feature-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 32px;
+    transition: all var(--transition);
+}
+.feature-card:hover { transform: translateY(-4px); border-color: var(--border-hover); }
+
+.feature-icon {
+    width: 50px; height: 50px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: #fff; margin-bottom: 16px;
+}
+.fi-blue { background: var(--gradient-blue); }
+.fi-purple { background: var(--gradient-purple); }
+.fi-teal { background: var(--gradient-teal); }
+.fi-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.fi-orange { background: linear-gradient(135deg, #f59e0b, #f97316); }
+.fi-pink { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+
+.feature-card h3 { font-family: var(--font-heading); font-size: 1.05rem; margin-bottom: 8px; }
+.feature-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
+@media (max-width: 968px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
+
+/* ============================================
+   SCANNER PAGE
+   ============================================ */
+.scanner-container {
+    min-height: calc(100vh - var(--nav-height));
+    display: flex; flex-direction: column;
+}
+
+/* Upload Zone */
+.scanner-upload-area {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 40px 24px;
+}
+
+.upload-zone {
+    max-width: 600px; width: 100%; text-align: center;
+    padding: 60px 40px; border: 2px dashed var(--border-color);
+    border-radius: var(--radius-xl); background: var(--bg-card);
+    transition: all var(--transition);
+}
+.upload-zone.dragover {
+    border-color: var(--accent-blue);
+    background: rgba(99,102,241,0.05);
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    width: 80px; height: 80px; margin: 0 auto 24px;
+    background: rgba(99,102,241,0.1); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: var(--accent-blue);
+}
+
+.upload-zone h2 { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 8px; }
+.upload-zone p { color: var(--text-secondary); font-size: 0.95rem; }
+.upload-formats { font-size: 0.8rem !important; color: var(--text-muted) !important; margin-top: 4px; }
+.upload-buttons { display: flex; gap: 16px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+
+/* Camera View */
+.camera-view {
+    flex: 1; display: flex; flex-direction: column;
+    background: #000;
+}
+
+.camera-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: rgba(0,0,0,0.8);
+    color: #fff;
+}
+.camera-header h3 { font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+
+.camera-preview {
+    flex: 1; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+
+#videoFeed {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+.camera-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.scan-frame {
+    width: 80%; height: 70%; max-width: 500px; max-height: 600px;
+    position: relative;
+}
+
+.corner {
+    position: absolute; width: 30px; height: 30px;
+    border-color: var(--accent-blue); border-style: solid;
+}
+.corner.tl { top: 0; left: 0; border-width: 3px 0 0 3px; }
+.corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; }
+.corner.bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; }
+.corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; }
+
+.camera-controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 24px; padding: 24px; background: rgba(0,0,0,0.8);
+}
+
+.btn-capture {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: transparent; padding: 0;
+}
+.capture-ring {
+    width: 100%; height: 100%; border-radius: 50%;
+    border: 4px solid #fff; display: flex;
+    align-items: center; justify-content: center;
+    transition: all var(--transition);
+}
+.capture-ring:hover { border-color: var(--accent-blue); }
+.capture-dot {
+    width: 54px; height: 54px; border-radius: 50%;
+    background: #fff; transition: all var(--transition);
+}
+.btn-capture:hover .capture-dot { background: var(--accent-blue); }
+
+.camera-controls .btn-outline { color: #fff; border-color: rgba(255,255,255,0.3); }
+.camera-controls .btn-outline:hover { border-color: #fff; color: #fff; }
+
+/* Editor View */
+.editor-view {
+    flex: 1; display: flex; flex-direction: column;
+}
+
+.editor-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+.editor-header h3 { font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+
+.editor-body {
+    flex: 1; display: flex; overflow: hidden;
+}
+
+/* Thumbnails */
+.thumbnails-panel {
+    width: 140px; min-width: 140px; background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color); padding: 16px 10px;
+    overflow-y: auto;
+}
+.thumbnails-panel h4 {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); margin-bottom: 12px; text-align: center;
+}
+
+.thumbnails-list { display: flex; flex-direction: column; gap: 8px; }
+
+.thumbnail-item {
+    position: relative; border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm); overflow: hidden; cursor: pointer;
+    transition: all var(--transition);
+}
+.thumbnail-item.active { border-color: var(--accent-blue); }
+.thumbnail-item:hover { border-color: var(--accent-blue); }
+
+.thumbnail-item img { width: 100%; height: 80px; object-fit: cover; }
+
+.thumb-num {
+    position: absolute; bottom: 4px; right: 4px;
+    background: rgba(0,0,0,0.7); color: #fff;
+    font-size: 0.65rem; padding: 2px 6px; border-radius: 4px;
+}
+.thumb-delete {
+    position: absolute; top: 4px; right: 4px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent-red); color: #fff;
+    font-size: 0.6rem; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity var(--transition);
+}
+.thumbnail-item:hover .thumb-delete { opacity: 1; }
+
+/* Preview */
+.preview-panel { flex: 1; display: flex; overflow: hidden; }
+
+.preview-canvas-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 24px; background: var(--bg-primary);
+    overflow: auto;
+}
+#previewCanvas {
+    max-width: 100%; max-height: 100%;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Adjustment Controls */
+.adjust-controls {
+    width: 280px; min-width: 280px; background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+    padding: 20px; overflow-y: auto;
+}
+.adjust-controls h4 {
+    font-size: 0.9rem; font-weight: 600; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--accent-blue);
+}
+
+.adjust-row { margin-bottom: 18px; }
+.adjust-row label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px;
+}
+.adjust-row input[type="range"] {
+    width: 100%; accent-color: var(--accent-blue);
+    height: 4px; -webkit-appearance: none; appearance: none;
+    background: var(--bg-input); border-radius: 2px; outline: none;
+}
+.adjust-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    background: var(--accent-blue); border-radius: 50%; cursor: pointer;
+}
+.range-val {
+    display: block; text-align: right; font-size: 0.75rem;
+    color: var(--text-muted); margin-top: 4px;
+}
+
+.adjust-presets {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0;
+}
+.preset-btn {
+    padding: 6px 14px; border-radius: var(--radius-full);
+    font-size: 0.78rem; font-weight: 500; background: var(--bg-input);
+    border: 1px solid var(--border-color); transition: all var(--transition);
+}
+.preset-btn.active, .preset-btn:hover {
+    background: var(--accent-blue); color: #fff; border-color: var(--accent-blue);
+}
+
+/* Editor Actions */
+.editor-actions {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; padding: 16px 24px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+@media (max-width: 968px) {
+    .editor-body { flex-direction: column; }
+    .thumbnails-panel {
+        width: 100%; min-width: 100%; flex-direction: row; padding: 10px;
+        border-right: none; border-bottom: 1px solid var(--border-color);
+    }
+    .thumbnails-list { flex-direction: row; overflow-x: auto; }
+    .thumbnail-item img { width: 60px; height: 50px; }
+    .adjust-controls { width: 100%; min-width: 100%; border-left: none; border-top: 1px solid var(--border-color); }
+    .preview-panel { flex-direction: column; }
+}
+
+/* ============================================
+   OCR PAGE
+   ============================================ */
+.ocr-container {
+    max-width: 1000px; margin: 0 auto; padding: 40px 24px;
+}
+
+.ocr-header { text-align: center; margin-bottom: 32px; }
+.ocr-header h2 { font-family: var(--font-heading); font-size: 1.8rem; margin-bottom: 8px; }
+.ocr-header p { color: var(--text-secondary); }
+
+.ocr-body {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 24px;
+}
+
+.ocr-image-panel {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+}
+.ocr-image-panel img {
+    max-width: 100%; max-height: 400px; border-radius: var(--radius-sm);
+}
+
+.ocr-text-panel {
+    display: flex; flex-direction: column;
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); overflow: hidden;
+}
+
+.ocr-text-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-bottom: 1px solid var(--border-color);
+}
+.ocr-text-header h4 { font-size: 0.9rem; }
+.ocr-text-actions { display: flex; gap: 6px; }
+
+#ocrTextArea {
+    flex: 1; min-height: 300px; padding: 20px;
+    background: var(--bg-input); border: none; outline: none;
+    color: var(--text-primary); font-size: 0.9rem; line-height: 1.7;
+}
+
+.ocr-progress {
+    margin-bottom: 24px; text-align: center;
+}
+.progress-bar {
+    width: 100%; height: 8px; background: var(--bg-input);
+    border-radius: 4px; overflow: hidden; margin-bottom: 12px;
+}
+.progress-fill {
+    height: 100%; width: 0; background: var(--gradient-primary);
+    border-radius: 4px; transition: width 0.3s ease;
+}
+#ocrStatusText { font-size: 0.85rem; color: var(--text-secondary); }
+
+.ocr-actions { display: flex; gap: 16px; justify-content: center; }
+
+@media (max-width: 768px) {
+    .ocr-body { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   ABOUT PAGE
+   ============================================ */
+.page-about { padding-top: calc(var(--nav-height) + 40px); padding-bottom: 60px; }
+
+.about-hero { text-align: center; margin-bottom: 60px; }
+.about-icon {
+    width: 80px; height: 80px; margin: 0 auto 20px;
+    background: var(--gradient-primary); border-radius: var(--radius-xl);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 2rem;
+}
+.about-hero h1 { font-family: var(--font-heading); font-size: 2.4rem; margin-bottom: 16px; }
+.about-hero p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 1.05rem; }
+
+.about-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-bottom: 60px;
+}
+.about-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 32px; text-align: center;
+    transition: all var(--transition);
+}
+.about-card:hover { transform: translateY(-4px); border-color: var(--border-hover); }
+.about-card i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 16px; }
+.about-card h3 { font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 8px; }
+.about-card p { font-size: 0.88rem; color: var(--text-secondary); }
+
+.about-faq { max-width: 700px; margin: 0 auto; }
+.about-faq h2 { font-family: var(--font-heading); font-size: 1.8rem; text-align: center; margin-bottom: 32px; }
+
+.faq-list { display: flex; flex-direction: column; gap: 10px; }
+.faq-item {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-md); overflow: hidden;
+}
+.faq-item.open { border-color: var(--border-hover); }
+
+.faq-question {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; font-size: 0.92rem; font-weight: 600; text-align: left;
+}
+.faq-question i { font-size: 0.8rem; color: var(--text-muted); transition: transform var(--transition); }
+.faq-item.open .faq-question i { transform: rotate(180deg); }
+
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-item.open .faq-answer { max-height: 200px; }
+.faq-answer p { padding: 0 20px 16px; color: var(--text-secondary); font-size: 0.88rem; }
+
+@media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    background: var(--bg-secondary); border-top: 1px solid var(--border-color);
+    padding: 48px 0 0; position: relative; z-index: 1;
+}
+
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.footer-brand p { color: var(--text-secondary); font-size: 0.88rem; margin: 12px 0 16px; }
+
+.social-icons { display: flex; gap: 10px; }
+.social-icons a {
+    width: 38px; height: 38px; border-radius: var(--radius-sm);
+    background: var(--bg-input); display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: all var(--transition);
+}
+.social-icons a:hover { background: var(--accent-blue); color: #fff; }
+
+.footer-links h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 14px; }
+.footer-links ul { display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { font-size: 0.85rem; color: var(--text-secondary); transition: color var(--transition); }
+.footer-links a:hover { color: var(--accent-blue); }
+
+.footer-bottom {
+    border-top: 1px solid var(--border-color); padding: 16px 0;
+    text-align: center; font-size: 0.8rem; color: var(--text-muted);
+}
+
+@media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr; } }
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--accent-blue); color: #fff;
+    padding: 12px 28px; border-radius: var(--radius-full);
+    font-size: 0.9rem; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 9999;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+<script>
+    /* ============================================
+   APP.JS — A Scan Document Scanner
+   ============================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ─── Global State ─────────────────────────
+    let scannedPages = [];      // Array of { img: Image, canvas: HTMLCanvasElement, adjustments: {} }
+    let activePageIndex = 0;
+    let cameraStream = null;
+    let facingMode = 'environment';
+
+    // ─── DOM Elements ─────────────────────────
+    const $ = id => document.getElementById(id);
+
+    const navbar         = $('navbar');
+    const themeToggle    = $('themeToggle');
+    const themeIcon      = $('themeIcon');
+    const hamburger      = $('hamburger');
+    const navLinksWrap   = $('navLinks');
+    const particleCanvas = $('particleCanvas');
+
+    // Pages
+    const pageHome    = $('pageHome');
+    const pageScanner = $('pageScanner');
+    const pageOcr     = $('pageOcr');
+    const pageAbout   = $('pageAbout');
+
+    // Scanner
+    const scannerUploadArea = $('scannerUploadArea');
+    const uploadZone    = $('uploadZone');
+    const uploadBtn     = $('uploadBtn');
+    const fileInput     = $('fileInput');
+    const cameraBtn     = $('cameraBtn');
+    const cameraInput   = $('cameraInput');
+
+    // Hero buttons
+    const heroUploadBtn = $('heroUploadBtn');
+    const heroCameraBtn = $('heroCameraBtn');
+
+    // Camera
+    const cameraView      = $('cameraView');
+    const videoFeed       = $('videoFeed');
+    const captureCanvas   = $('captureCanvas');
+    const captureBtn      = $('captureBtn');
+    const closeCameraBtn  = $('closeCameraBtn');
+    const cancelCameraBtn = $('cancelCameraBtn');
+    const switchCameraBtn = $('switchCameraBtn');
+
+    // Editor
+    const editorView      = $('editorView');
+    const previewCanvas   = $('previewCanvas');
+    const thumbnailsList  = $('thumbnailsList');
+    const pageCount       = $('pageCount');
+    const addMoreBtn      = $('addMoreBtn');
+    const addMoreInput    = $('addMoreInput');
+    const cancelEditBtn   = $('cancelEditBtn');
+    const downloadPdfBtn  = $('downloadPdfBtn');
+    const ocrBtn          = $('ocrBtn');
+    const resetAdjustBtn  = $('resetAdjustBtn');
+
+    // Adjustments
+    const brightnessRange  = $('brightnessRange');
+    const contrastRange    = $('contrastRange');
+    const saturationRange  = $('saturationRange');
+    const rotationRange    = $('rotationRange');
+    const brightnessVal    = $('brightnessVal');
+    const contrastVal      = $('contrastVal');
+    const saturationVal    = $('saturationVal');
+    const rotationVal      = $('rotationVal');
+
+    // OCR
+    const ocrSourceImg    = $('ocrSourceImg');
+    const ocrTextArea     = $('ocrTextArea');
+    const ocrProgress     = $('ocrProgress');
+    const ocrProgressFill = $('ocrProgressFill');
+    const ocrStatusText   = $('ocrStatusText');
+    const copyTextBtn     = $('copyTextBtn');
+    const downloadTextBtn = $('downloadTextBtn');
+    const ocrBackBtn      = $('ocrBackBtn');
+    const ocrDownloadPdfBtn = $('ocrDownloadPdfBtn');
+
+    // Toast
+    const toast    = $('toast');
+    const toastMsg = $('toastMsg');
+
+    // ─── Theme Toggle ─────────────────────────
+    const savedTheme = localStorage.getItem('ascan-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const curr = document.documentElement.getAttribute('data-theme');
+        const next = curr === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ascan-theme', next);
+        updateThemeIcon(next);
+    });
+
+    function updateThemeIcon(t) {
+        themeIcon.className = t === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    // ─── Hamburger ────────────────────────────
+    hamburger.addEventListener('click', () => navLinksWrap.classList.toggle('active'));
+
+    // ─── Page Navigation ──────────────────────
+    const pages = { home: pageHome, scanner: pageScanner, ocr: pageOcr, about: pageAbout };
+
+    function navigateTo(pageName) {
+        Object.values(pages).forEach(p => p.classList.remove('active'));
+        if (pages[pageName]) pages[pageName].classList.add('active');
+
+        document.querySelectorAll('.nav-link').forEach(l => {
+            l.classList.toggle('active', l.dataset.page === pageName);
+        });
+
+        navLinksWrap.classList.remove('active');
+        window.scrollTo(0, 0);
+
+        // Stop camera if leaving scanner
+        if (pageName !== 'scanner') stopCamera();
+    }
+
+    document.querySelectorAll('[data-page]').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            navigateTo(link.dataset.page);
+        });
+    });
+
+    // Logo clicks
+    $('logoBtn').addEventListener('click', e => { e.preventDefault(); navigateTo('home'); });
+    $('footerLogoBtn').addEventListener('click', e => { e.preventDefault(); navigateTo('home'); });
+
+    // ─── Hero Buttons → Scanner Page ──────────
+    heroUploadBtn.addEventListener('click', () => {
+        navigateTo('scanner');
+        setTimeout(() => fileInput.click(), 300);
+    });
+
+    heroCameraBtn.addEventListener('click', () => {
+        navigateTo('scanner');
+        setTimeout(() => startCamera(), 300);
+    });
+
+    // ─── Particle Canvas (Hero) ───────────────
+    if (particleCanvas) {
+        const ctx = particleCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            particleCanvas.width = particleCanvas.offsetWidth;
+            particleCanvas.height = particleCanvas.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = Math.random() * particleCanvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > particleCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > particleCanvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(99,102,241,${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.strokeStyle = `rgba(99,102,241,${0.06 * (1 - dist / 100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    }
+
+    // ─── Drag & Drop ──────────────────────────
+    uploadZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length) handleFiles(files);
+    });
+
+    // ─── File Upload ──────────────────────────
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) handleFiles(fileInput.files);
+        fileInput.value = '';
+    });
+
+    addMoreBtn.addEventListener('click', () => addMoreInput.click());
+    addMoreInput.addEventListener('change', () => {
+        if (addMoreInput.files.length) handleFiles(addMoreInput.files);
+        addMoreInput.value = '';
+    });
+
+    function handleFiles(files) {
+        const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+        if (!imageFiles.length) { showToast('Please select image files.'); return; }
+
+        let loaded = 0;
+        imageFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    addPage(img);
+                    loaded++;
+                    if (loaded === imageFiles.length) {
+                        showEditor();
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // ─── Camera ───────────────────────────────
+    cameraBtn.addEventListener('click', () => startCamera());
+
+    async function startCamera() {
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } }
+            });
+            videoFeed.srcObject = cameraStream;
+            scannerUploadArea.style.display = 'none';
+            editorView.style.display = 'none';
+            cameraView.style.display = 'flex';
+        } catch (err) {
+            // Fallback: use file input with camera capture
+            showToast('Camera not available. Using file picker.');
+            cameraInput.click();
+        }
+    }
+
+    cameraInput.addEventListener('change', () => {
+        if (cameraInput.files.length) handleFiles(cameraInput.files);
+        cameraInput.value = '';
+    });
+
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+        videoFeed.srcObject = null;
+    }
+
+    closeCameraBtn.addEventListener('click', () => {
+        stopCamera();
+        cameraView.style.display = 'none';
+        if (scannedPages.length) { editorView.style.display = 'flex'; }
+        else { scannerUploadArea.style.display = 'flex'; }
+    });
+
+    cancelCameraBtn.addEventListener('click', () => {
+        stopCamera();
+        cameraView.style.display = 'none';
+        if (scannedPages.length) { editorView.style.display = 'flex'; }
+        else { scannerUploadArea.style.display = 'flex'; }
+    });
+
+    switchCameraBtn.addEventListener('click', async () => {
+        facingMode = facingMode === 'environment' ? 'user' : 'environment';
+        stopCamera();
+        startCamera();
+    });
+
+    captureBtn.addEventListener('click', () => {
+        const w = videoFeed.videoWidth;
+        const h = videoFeed.videoHeight;
+        captureCanvas.width = w;
+        captureCanvas.height = h;
+        const ctx = captureCanvas.getContext('2d');
+        ctx.drawImage(videoFeed, 0, 0, w, h);
+
+        const img = new Image();
+        img.onload = () => {
+            addPage(img);
+            showToast('Photo captured!');
+            // Keep camera open for more captures
+        };
+        img.src = captureCanvas.toDataURL('image/jpeg', 0.92);
+    });
+
+    // ─── Page Management ──────────────────────
+    function addPage(img) {
+        const page = {
+            img: img,
+            adjustments: {
+                brightness: 0,
+                contrast: 0,
+                saturation: 0,
+                rotation: 0,
+                filter: 'original'
+            }
+        };
+
+        // Auto-adjust on add
+        page.adjustments.brightness = 5;
+        page.adjustments.contrast = 10;
+
+        scannedPages.push(page);
+        activePageIndex = scannedPages.length - 1;
+        updateThumbnails();
+    }
+
+    function updateThumbnails() {
+        thumbnailsList.innerHTML = '';
+        pageCount.textContent = scannedPages.length;
+
+        scannedPages.forEach((page, i) => {
+            const thumb = document.createElement('div');
+            thumb.className = `thumbnail-item${i === activePageIndex ? ' active' : ''}`;
+            thumb.innerHTML = `
+                <img src="${page.img.src}" alt="Page ${i + 1}" />
+                <span class="thumb-num">${i + 1}</span>
+                <button class="thumb-delete" data-index="${i}"><i class="fas fa-times"></i></button>
+            `;
+            thumb.addEventListener('click', (e) => {
+                if (e.target.closest('.thumb-delete')) return;
+                activePageIndex = i;
+                loadPageToEditor();
+                updateThumbnails();
+            });
+            thumb.querySelector('.thumb-delete').addEventListener('click', (e) => {
+                e.stopPropagation();
+                scannedPages.splice(i, 1);
+                if (scannedPages.length === 0) {
+                    showUploadArea();
+                    return;
+                }
+                if (activePageIndex >= scannedPages.length) activePageIndex = scannedPages.length - 1;
+                loadPageToEditor();
+                updateThumbnails();
+            });
+            thumbnailsList.appendChild(thumb);
+        });
+    }
+
+    function showEditor() {
+        stopCamera();
+        scannerUploadArea.style.display = 'none';
+        cameraView.style.display = 'none';
+        editorView.style.display = 'flex';
+        loadPageToEditor();
+    }
+
+    function showUploadArea() {
+        stopCamera();
+        editorView.style.display = 'none';
+        cameraView.style.display = 'none';
+        scannerUploadArea.style.display = 'flex';
+        scannedPages = [];
+        activePageIndex = 0;
+    }
+
+    function loadPageToEditor() {
+        if (!scannedPages.length) return;
+        const page = scannedPages[activePageIndex];
+        const adj = page.adjustments;
+
+        brightnessRange.value = adj.brightness;
+        contrastRange.value = adj.contrast;
+        saturationRange.value = adj.saturation;
+        rotationRange.value = adj.rotation;
+        brightnessVal.textContent = adj.brightness;
+        contrastVal.textContent = adj.contrast;
+        saturationVal.textContent = adj.saturation;
+        rotationVal.textContent = adj.rotation + '°';
+
+        document.querySelectorAll('.preset-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.filter === adj.filter);
+        });
+
+        renderPreview();
+        updateThumbnails();
+    }
+
+    // ─── Image Rendering with Adjustments ─────
+    function renderPreview() {
+        if (!scannedPages.length) return;
+        const page = scannedPages[activePageIndex];
+        const img = page.img;
+        const adj = page.adjustments;
+
+        const rotation = parseInt(adj.rotation);
+        const isRotated = rotation === 90 || rotation === 270;
+        const cw = isRotated ? img.height : img.width;
+        const ch = isRotated ? img.width : img.height;
+
+        previewCanvas.width = cw;
+        previewCanvas.height = ch;
+
+        const ctx = previewCanvas.getContext('2d');
+        ctx.save();
+
+        ctx.translate(cw / 2, ch / 2);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        ctx.restore();
+
+        // Apply adjustments via pixel manipulation
+        const imageData = ctx.getImageData(0, 0, cw, ch);
+        const data = imageData.data;
+
+        const brightness = parseInt(adj.brightness);
+        const contrast = parseInt(adj.contrast);
+        const saturation = parseInt(adj.saturation);
+
+        const contrastFactor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+        for (let i = 0; i < data.length; i += 4) {
+            let r = data[i];
+            let g = data[i + 1];
+            let b = data[i + 2];
+
+            // Brightness
+            r += brightness * 2;
+            g += brightness * 2;
+            b += brightness * 2;
+
+            // Contrast
+            r = contrastFactor * (r - 128) + 128;
+            g = contrastFactor * (g - 128) + 128;
+            b = contrastFactor * (b - 128) + 128;
+
+            // Saturation
+            const gray = 0.2989 * r + 0.587 * g + 0.114 * b;
+            const sat = 1 + saturation / 100;
+            r = gray + sat * (r - gray);
+            g = gray + sat * (g - gray);
+            b = gray + sat * (b - gray);
+
+            // Apply filter presets
+            if (adj.filter === 'bw') {
+                const bw = 0.299 * r + 0.587 * g + 0.114 * b;
+                r = g = b = bw;
+            } else if (adj.filter === 'document') {
+                const bw = 0.299 * r + 0.587 * g + 0.114 * b;
+                r = g = b = bw > 140 ? 255 : 0; // Threshold
+            }
+
+            data[i] = Math.max(0, Math.min(255, r));
+            data[i + 1] = Math.max(0, Math.min(255, g));
+            data[i + 2] = Math.max(0, Math.min(255, b));
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    // ─── Adjustment Controls ──────────────────
+    [brightnessRange, contrastRange, saturationRange, rotationRange].forEach(range => {
+        range.addEventListener('input', () => {
+            if (!scannedPages.length) return;
+            const adj = scannedPages[activePageIndex].adjustments;
+            adj.brightness = parseInt(brightnessRange.value);
+            adj.contrast = parseInt(contrastRange.value);
+            adj.saturation = parseInt(saturationRange.value);
+            adj.rotation = parseInt(rotationRange.value);
+
+            brightnessVal.textContent = adj.brightness;
+            contrastVal.textContent = adj.contrast;
+            saturationVal.textContent = adj.saturation;
+            rotationVal.textContent = adj.rotation + '°';
+
+            renderPreview();
+        });
+    });
+
+    // Preset Filters
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!scannedPages.length) return;
+            const filter = btn.dataset.filter;
+            const adj = scannedPages[activePageIndex].adjustments;
+
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            adj.filter = filter;
+
+            if (filter === 'auto') {
+                adj.brightness = 10;
+                adj.contrast = 20;
+                adj.saturation = 5;
+            } else if (filter === 'highcontrast') {
+                adj.brightness = 5;
+                adj.contrast = 50;
+                adj.saturation = 0;
+            } else if (filter === 'bw') {
+                adj.brightness = 5;
+                adj.contrast = 15;
+                adj.saturation = -100;
+            } else if (filter === 'document') {
+                adj.brightness = 15;
+                adj.contrast = 40;
+                adj.saturation = -100;
+            } else {
+                adj.brightness = 0;
+                adj.contrast = 0;
+                adj.saturation = 0;
+            }
+
+            brightnessRange.value = adj.brightness;
+            contrastRange.value = adj.contrast;
+            saturationRange.value = adj.saturation;
+            brightnessVal.textContent = adj.brightness;
+            contrastVal.textContent = adj.contrast;
+            saturationVal.textContent = adj.saturation;
+
+            renderPreview();
+        });
+    });
+
+    resetAdjustBtn.addEventListener('click', () => {
+        if (!scannedPages.length) return;
+        const adj = scannedPages[activePageIndex].adjustments;
+        adj.brightness = 0; adj.contrast = 0; adj.saturation = 0; adj.rotation = 0; adj.filter = 'original';
+
+        brightnessRange.value = 0; contrastRange.value = 0;
+        saturationRange.value = 0; rotationRange.value = 0;
+        brightnessVal.textContent = '0'; contrastVal.textContent = '0';
+        saturationVal.textContent = '0'; rotationVal.textContent = '0°';
+
+        document.querySelectorAll('.preset-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.filter === 'original');
+        });
+        renderPreview();
+    });
+
+    // ─── Cancel Edit → Back to Front Page ─────
+    cancelEditBtn.addEventListener('click', () => {
+        if (confirm('Discard all scanned pages?')) {
+            showUploadArea();
+            navigateTo('home');
+        }
+    });
+
+    // ─── Download PDF ─────────────────────────
+    downloadPdfBtn.addEventListener('click', () => {
+        if (!scannedPages.length) { showToast('No pages to convert.'); return; }
+
+        showToast('Generating PDF...');
+
+        const { jsPDF } = window.jspdf;
+
+        // Render all pages first
+        const canvases = [];
+        scannedPages.forEach((page, i) => {
+            const prevActive = activePageIndex;
+            activePageIndex = i;
+            renderPreview();
+            // Clone canvas data
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = previewCanvas.width;
+            tempCanvas.height = previewCanvas.height;
+            tempCanvas.getContext('2d').drawImage(previewCanvas, 0, 0);
+            canvases.push(tempCanvas);
+            activePageIndex = prevActive;
+        });
+        // Re-render current page
+        renderPreview();
+
+        // Create PDF
+        const firstCanvas = canvases[0];
+        const pdfOrientation = firstCanvas.width > firstCanvas.height ? 'landscape' : 'portrait';
+        const pdf = new jsPDF(pdfOrientation, 'px', [firstCanvas.width, firstCanvas.height]);
+
+        canvases.forEach((canvas, i) => {
+            if (i > 0) {
+                const orient = canvas.width > canvas.height ? 'landscape' : 'portrait';
+                pdf.addPage([canvas.width, canvas.height], orient);
+            }
+            const imgData = canvas.toDataURL('image/jpeg', 0.92);
+            pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+        });
+
+        pdf.save('A_Scan_Document.pdf');
+        showToast('PDF downloaded successfully!');
+    });
+
+    // ─── OCR Text Scanning ────────────────────
+    ocrBtn.addEventListener('click', () => {
+        if (!scannedPages.length) { showToast('No page to scan.'); return; }
+
+        // Render current page
+        renderPreview();
+
+        // Get image data
+        const imgDataUrl = previewCanvas.toDataURL('image/png');
+        ocrSourceImg.src = imgDataUrl;
+        ocrTextArea.value = '';
+
+        navigateTo('ocr');
+
+        // Show progress
+        ocrProgress.style.display = 'block';
+        ocrProgressFill.style.width = '0%';
+        ocrStatusText.textContent = 'Initializing OCR engine...';
+
+        Tesseract.recognize(imgDataUrl, 'eng', {
+            logger: m => {
+                if (m.status === 'recognizing text') {
+                    const pct = Math.round(m.progress * 100);
+                    ocrProgressFill.style.width = pct + '%';
+                    ocrStatusText.textContent = `Recognizing text... ${pct}%`;
+                } else {
+                    ocrStatusText.textContent = m.status;
+                }
+            }
+        }).then(({ data: { text } }) => {
+            ocrTextArea.value = text;
+            ocrProgress.style.display = 'none';
+            showToast('Text extracted successfully!');
+        }).catch(err => {
+            ocrProgress.style.display = 'none';
+            ocrTextArea.value = 'Error extracting text: ' + err.message;
+            showToast('OCR failed. Try again.');
+        });
+    });
+
+    copyTextBtn.addEventListener('click', () => {
+        ocrTextArea.select();
+        navigator.clipboard.writeText(ocrTextArea.value);
+        showToast('Text copied to clipboard!');
+    });
+
+    downloadTextBtn.addEventListener('click', () => {
+        const text = ocrTextArea.value;
+        if (!text.trim()) { showToast('No text to download.'); return; }
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'A_Scan_OCR_Text.txt'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('Text file downloaded!');
+    });
+
+    ocrBackBtn.addEventListener('click', () => {
+        navigateTo('scanner');
+        if (scannedPages.length) showEditor();
+    });
+
+    ocrDownloadPdfBtn.addEventListener('click', () => {
+        const text = ocrTextArea.value;
+        if (!text.trim()) { showToast('No text to save.'); return; }
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        // Add image
+        const imgDataUrl = ocrSourceImg.src;
+        const imgProps = pdf.getImageProperties(imgDataUrl);
+        const pdfWidth = pdf.internal.pageSize.getWidth() - 20;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgDataUrl, 'PNG', 10, 10, pdfWidth, Math.min(pdfHeight, 150));
+
+        // Add text below
+        pdf.setFontSize(10);
+        const lines = pdf.splitTextToSize(text, pdfWidth);
+        let y = Math.min(pdfHeight, 150) + 20;
+        lines.forEach(line => {
+            if (y > pdf.internal.pageSize.getHeight() - 20) {
+                pdf.addPage();
+                y = 20;
+            }
+            pdf.text(line, 10, y);
+            y += 5;
+        });
+
+        pdf.save('A_Scan_OCR_Document.pdf');
+        showToast('PDF with text saved!');
+    });
+
+    // ─── FAQ Accordion ────────────────────────
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    // ─── Navbar Scroll Effect ─────────────────
+    window.addEventListener('scroll', () => {
+        navbar.style.boxShadow = window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.15)' : 'none';
+    });
+
+    // ─── Toast Notification ───────────────────
+    let toastTimeout;
+    function showToast(msg) {
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+});
+</script>
